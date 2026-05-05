@@ -1,0 +1,12 @@
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+.idea/
+*.iml
+*.iws
+.DS_Store
