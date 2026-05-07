@@ -32,6 +32,7 @@ public class PanelMapper {
         response.setMainAmp(panel.getMainAmp());
         response.setVoltage(panel.getVoltage());
         response.setFrequency(panel.getFrequency());
+        response.setDefault(panel.isDefault());
         response.setCreatedAt(panel.getCreatedAt());
         response.setUpdatedAt(panel.getUpdatedAt());
         return response;

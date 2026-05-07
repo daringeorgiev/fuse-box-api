@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +24,7 @@ public class PanelService {
 
     public List<PanelResponse> findAll() {
         return panelRepository.findAll().stream()
+                .sorted(Comparator.comparing(Panel::isDefault).reversed())
                 .map(panelMapper::toResponse)
                 .toList();
     }

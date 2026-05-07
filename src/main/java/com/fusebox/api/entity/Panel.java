@@ -43,6 +43,9 @@ public class Panel {
     @Column(nullable = false)
     private int frequency;
 
+    @Column(nullable = false)
+    private boolean isDefault;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
