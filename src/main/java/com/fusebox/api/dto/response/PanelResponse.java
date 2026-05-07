@@ -13,6 +13,9 @@ public class PanelResponse {
     private String description;
     private int numRows;
     private int fusesPerRow;
+    private int mainAmp;
+    private int voltage;
+    private int frequency;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

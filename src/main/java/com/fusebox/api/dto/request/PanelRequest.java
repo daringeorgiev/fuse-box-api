@@ -22,4 +22,16 @@ public class PanelRequest {
     @NotNull
     @Min(1)
     private Integer fusesPerRow;
+
+    @NotNull
+    @Min(1)
+    private Integer mainAmp;
+
+    @NotNull
+    @Min(1)
+    private Integer voltage;
+
+    @NotNull
+    @Min(1)
+    private Integer frequency;
 }

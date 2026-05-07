@@ -34,6 +34,15 @@ public class Panel {
     @Column(nullable = false)
     private int fusesPerRow;
 
+    @Column(nullable = false)
+    private int mainAmp;
+
+    @Column(nullable = false)
+    private int voltage;
+
+    @Column(nullable = false)
+    private int frequency;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
