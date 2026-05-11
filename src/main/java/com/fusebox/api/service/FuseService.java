@@ -24,27 +24,27 @@ public class FuseService {
     private final PanelService panelService;
 
     public List<FuseResponse> findByPanel(UUID panelId, String userId) {
-        panelService.getPanel(panelId, userId);
+        panelService.getReadablePanel(panelId, userId);
         return fuseRepository.findByPanelIdOrderByPosition(panelId).stream()
                 .map(fuseMapper::toResponse)
                 .toList();
     }
 
     public FuseResponse findById(UUID panelId, UUID id, String userId) {
-        panelService.getPanel(panelId, userId);
+        panelService.getReadablePanel(panelId, userId);
         return fuseMapper.toResponse(getFuse(id));
     }
 
     @Transactional
     public FuseResponse create(UUID panelId, FuseRequest request, String userId) {
         Fuse fuse = fuseMapper.toEntity(request);
-        fuse.setPanel(panelService.getPanel(panelId, userId));
+        fuse.setPanel(panelService.getOwnedPanel(panelId, userId));
         return fuseMapper.toResponse(fuseRepository.save(fuse));
     }
 
     @Transactional
     public FuseResponse update(UUID panelId, UUID id, FuseRequest request, String userId) {
-        panelService.getPanel(panelId, userId);
+        panelService.getOwnedPanel(panelId, userId);
         Fuse fuse = getFuse(id);
         fuseMapper.updateEntity(request, fuse);
         return fuseMapper.toResponse(fuseRepository.save(fuse));
@@ -52,13 +52,13 @@ public class FuseService {
 
     @Transactional
     public void delete(UUID panelId, UUID id, String userId) {
-        panelService.getPanel(panelId, userId);
+        panelService.getOwnedPanel(panelId, userId);
         fuseRepository.delete(getFuse(id));
     }
 
     @Transactional
     public List<FuseResponse> reorder(UUID panelId, ReorderRequest request, String userId) {
-        panelService.getPanel(panelId, userId);
+        panelService.getOwnedPanel(panelId, userId);
         List<UUID> orderedIds = request.getOrderedIds();
         for (int i = 0; i < orderedIds.size(); i++) {
             Fuse fuse = getFuse(orderedIds.get(i));

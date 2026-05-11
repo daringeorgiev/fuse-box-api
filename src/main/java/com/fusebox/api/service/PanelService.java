@@ -7,6 +7,7 @@ import com.fusebox.api.exception.ResourceNotFoundException;
 import com.fusebox.api.mapper.PanelMapper;
 import com.fusebox.api.repository.PanelRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +34,7 @@ public class PanelService {
     }
 
     public PanelResponse findById(UUID id, String userId) {
-        return panelMapper.toResponse(getPanel(id, userId));
+        return panelMapper.toResponse(getReadablePanel(id, userId));
     }
 
     @Transactional
@@ -45,17 +46,17 @@ public class PanelService {
 
     @Transactional
     public PanelResponse update(UUID id, PanelRequest request, String userId) {
-        Panel panel = getPanel(id, userId);
+        Panel panel = getOwnedPanel(id, userId);
         panelMapper.updateEntity(request, panel);
         return panelMapper.toResponse(panelRepository.save(panel));
     }
 
     @Transactional
     public void delete(UUID id, String userId) {
-        panelRepository.delete(getPanel(id, userId));
+        panelRepository.delete(getOwnedPanel(id, userId));
     }
 
-    Panel getPanel(UUID id, String userId) {
+    Panel getReadablePanel(UUID id, String userId) {
         if (userId != null) {
             return panelRepository.findByIdAndUserId(id, userId)
                     .or(() -> panelRepository.findById(id).filter(Panel::isDefault))
@@ -65,6 +66,15 @@ public class PanelService {
                 .orElseThrow(() -> new ResourceNotFoundException("Panel not found: " + id));
         if (!panel.isDefault()) {
             throw new ResourceNotFoundException("Panel not found: " + id);
+        }
+        return panel;
+    }
+
+    Panel getOwnedPanel(UUID id, String userId) {
+        Panel panel = panelRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Panel not found: " + id));
+        if (userId == null || !userId.equals(panel.getUserId())) {
+            throw new AccessDeniedException("Access denied to panel: " + id);
         }
         return panel;
     }
