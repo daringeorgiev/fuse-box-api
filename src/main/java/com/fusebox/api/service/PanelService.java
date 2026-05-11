@@ -22,37 +22,50 @@ public class PanelService {
     private final PanelRepository panelRepository;
     private final PanelMapper panelMapper;
 
-    public List<PanelResponse> findAll() {
-        return panelRepository.findAll().stream()
+    public List<PanelResponse> findAll(String userId) {
+        List<Panel> panels = userId != null
+                ? panelRepository.findByUserIdOrIsDefaultTrue(userId)
+                : panelRepository.findByIsDefaultTrue();
+        return panels.stream()
                 .sorted(Comparator.comparing(Panel::isDefault).reversed())
                 .map(panelMapper::toResponse)
                 .toList();
     }
 
-    public PanelResponse findById(UUID id) {
-        return panelMapper.toResponse(getPanel(id));
+    public PanelResponse findById(UUID id, String userId) {
+        return panelMapper.toResponse(getPanel(id, userId));
     }
 
     @Transactional
-    public PanelResponse create(PanelRequest request) {
+    public PanelResponse create(PanelRequest request, String userId) {
         Panel panel = panelMapper.toEntity(request);
+        panel.setUserId(userId);
         return panelMapper.toResponse(panelRepository.save(panel));
     }
 
     @Transactional
-    public PanelResponse update(UUID id, PanelRequest request) {
-        Panel panel = getPanel(id);
+    public PanelResponse update(UUID id, PanelRequest request, String userId) {
+        Panel panel = getPanel(id, userId);
         panelMapper.updateEntity(request, panel);
         return panelMapper.toResponse(panelRepository.save(panel));
     }
 
     @Transactional
-    public void delete(UUID id) {
-        panelRepository.delete(getPanel(id));
+    public void delete(UUID id, String userId) {
+        panelRepository.delete(getPanel(id, userId));
     }
 
-    Panel getPanel(UUID id) {
-        return panelRepository.findById(id)
+    Panel getPanel(UUID id, String userId) {
+        if (userId != null) {
+            return panelRepository.findByIdAndUserId(id, userId)
+                    .or(() -> panelRepository.findById(id).filter(Panel::isDefault))
+                    .orElseThrow(() -> new ResourceNotFoundException("Panel not found: " + id));
+        }
+        Panel panel = panelRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Panel not found: " + id));
+        if (!panel.isDefault()) {
+            throw new ResourceNotFoundException("Panel not found: " + id);
+        }
+        return panel;
     }
 }

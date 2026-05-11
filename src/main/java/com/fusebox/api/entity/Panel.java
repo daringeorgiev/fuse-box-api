@@ -46,6 +46,9 @@ public class Panel {
     @Column(nullable = false)
     private boolean isDefault;
 
+    @Column(length = 128)
+    private String userId;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 

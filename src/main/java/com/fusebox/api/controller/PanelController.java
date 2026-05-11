@@ -6,6 +6,7 @@ import com.fusebox.api.service.PanelService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,29 +20,32 @@ public class PanelController {
     private final PanelService panelService;
 
     @GetMapping
-    public List<PanelResponse> getAll() {
-        return panelService.findAll();
+    public List<PanelResponse> getAll(@AuthenticationPrincipal String uid) {
+        return panelService.findAll(uid);
     }
 
     @GetMapping("/{id}")
-    public PanelResponse getById(@PathVariable UUID id) {
-        return panelService.findById(id);
+    public PanelResponse getById(@PathVariable UUID id, @AuthenticationPrincipal String uid) {
+        return panelService.findById(id, uid);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PanelResponse create(@Valid @RequestBody PanelRequest request) {
-        return panelService.create(request);
+    public PanelResponse create(@Valid @RequestBody PanelRequest request,
+                                @AuthenticationPrincipal String uid) {
+        return panelService.create(request, uid);
     }
 
     @PutMapping("/{id}")
-    public PanelResponse update(@PathVariable UUID id, @Valid @RequestBody PanelRequest request) {
-        return panelService.update(id, request);
+    public PanelResponse update(@PathVariable UUID id,
+                                @Valid @RequestBody PanelRequest request,
+                                @AuthenticationPrincipal String uid) {
+        return panelService.update(id, request, uid);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable UUID id) {
-        panelService.delete(id);
+    public void delete(@PathVariable UUID id, @AuthenticationPrincipal String uid) {
+        panelService.delete(id, uid);
     }
 }

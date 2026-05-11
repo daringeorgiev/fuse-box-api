@@ -23,44 +23,49 @@ public class FuseService {
     private final FuseMapper fuseMapper;
     private final PanelService panelService;
 
-    public List<FuseResponse> findByPanel(UUID panelId) {
+    public List<FuseResponse> findByPanel(UUID panelId, String userId) {
+        panelService.getPanel(panelId, userId);
         return fuseRepository.findByPanelIdOrderByPosition(panelId).stream()
                 .map(fuseMapper::toResponse)
                 .toList();
     }
 
-    public FuseResponse findById(UUID id) {
+    public FuseResponse findById(UUID panelId, UUID id, String userId) {
+        panelService.getPanel(panelId, userId);
         return fuseMapper.toResponse(getFuse(id));
     }
 
     @Transactional
-    public FuseResponse create(UUID panelId, FuseRequest request) {
+    public FuseResponse create(UUID panelId, FuseRequest request, String userId) {
         Fuse fuse = fuseMapper.toEntity(request);
-        fuse.setPanel(panelService.getPanel(panelId));
+        fuse.setPanel(panelService.getPanel(panelId, userId));
         return fuseMapper.toResponse(fuseRepository.save(fuse));
     }
 
     @Transactional
-    public FuseResponse update(UUID id, FuseRequest request) {
+    public FuseResponse update(UUID panelId, UUID id, FuseRequest request, String userId) {
+        panelService.getPanel(panelId, userId);
         Fuse fuse = getFuse(id);
         fuseMapper.updateEntity(request, fuse);
         return fuseMapper.toResponse(fuseRepository.save(fuse));
     }
 
     @Transactional
-    public void delete(UUID id) {
+    public void delete(UUID panelId, UUID id, String userId) {
+        panelService.getPanel(panelId, userId);
         fuseRepository.delete(getFuse(id));
     }
 
     @Transactional
-    public List<FuseResponse> reorder(UUID panelId, ReorderRequest request) {
+    public List<FuseResponse> reorder(UUID panelId, ReorderRequest request, String userId) {
+        panelService.getPanel(panelId, userId);
         List<UUID> orderedIds = request.getOrderedIds();
         for (int i = 0; i < orderedIds.size(); i++) {
             Fuse fuse = getFuse(orderedIds.get(i));
             fuse.setPosition(i);
             fuseRepository.save(fuse);
         }
-        return findByPanel(panelId);
+        return findByPanel(panelId, userId);
     }
 
     private Fuse getFuse(UUID id) {
