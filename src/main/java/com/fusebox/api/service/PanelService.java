@@ -8,6 +8,8 @@ import com.fusebox.api.mapper.PanelMapper;
 import com.fusebox.api.repository.PanelRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,9 +75,15 @@ public class PanelService {
     Panel getOwnedPanel(UUID id, String userId) {
         Panel panel = panelRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Panel not found: " + id));
-        if (userId == null || !userId.equals(panel.getUserId())) {
-            throw new AccessDeniedException("Access denied to panel: " + id);
+        if (isAdmin() || (userId != null && userId.equals(panel.getUserId()))) {
+            return panel;
         }
-        return panel;
+        throw new AccessDeniedException("Access denied to panel: " + id);
+    }
+
+    private boolean isAdmin() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth != null && auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
     }
 }

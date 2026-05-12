@@ -7,6 +7,7 @@ import com.fusebox.api.service.FuseService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +36,7 @@ public class FuseController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("isAuthenticated()")
     public FuseResponse create(@PathVariable UUID panelId,
                                @Valid @RequestBody FuseRequest request,
                                @AuthenticationPrincipal String uid) {
@@ -42,6 +44,7 @@ public class FuseController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public FuseResponse update(@PathVariable UUID panelId,
                                @PathVariable UUID id,
                                @Valid @RequestBody FuseRequest request,
@@ -51,6 +54,7 @@ public class FuseController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("isAuthenticated()")
     public void delete(@PathVariable UUID panelId,
                        @PathVariable UUID id,
                        @AuthenticationPrincipal String uid) {
@@ -58,6 +62,7 @@ public class FuseController {
     }
 
     @PutMapping("/reorder")
+    @PreAuthorize("isAuthenticated()")
     public List<FuseResponse> reorder(@PathVariable UUID panelId,
                                       @Valid @RequestBody ReorderRequest request,
                                       @AuthenticationPrincipal String uid) {
