@@ -75,7 +75,13 @@ public class PanelService {
     Panel getOwnedPanel(UUID id, String userId) {
         Panel panel = panelRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Panel not found: " + id));
-        if (isAdmin() || (userId != null && userId.equals(panel.getUserId()))) {
+        if (isAdmin()) {
+            return panel;
+        }
+        if (panel.isDefault()) {
+            throw new AccessDeniedException("Only admins can modify the default panel");
+        }
+        if (userId != null && userId.equals(panel.getUserId())) {
             return panel;
         }
         throw new AccessDeniedException("Access denied to panel: " + id);
