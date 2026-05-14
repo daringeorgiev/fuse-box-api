@@ -2,6 +2,15 @@
 
 REST API for managing electrical fuse panels and circuit breakers, built with Spring Boot 4 and PostgreSQL.
 
+**Frontend:** consumed by [fuse-box-ui](https://github.com/daringeorgiev/fuse-box-ui).
+
+## Quick start
+
+```bash
+docker-compose up -d db   # start PostgreSQL
+mvn spring-boot:run       # start the API on :8080
+```
+
 ## Prerequisites
 
 - Java 21+
