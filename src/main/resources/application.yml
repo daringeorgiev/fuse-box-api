@@ -30,6 +30,9 @@ springdoc:
 firebase:
   service-account-path: ${FIREBASE_SERVICE_ACCOUNT_PATH:service-account.json}
 
+cors:
+  allowed-origin: ${CORS_ALLOWED_ORIGIN:http://localhost:5173}
+
 debug: true
 
 logging:

@@ -45,6 +45,10 @@ Controller → Service → Repository (JPA) → PostgreSQL
 - Entities use `@GeneratedValue(strategy = GenerationType.UUID)` (Hibernate 6+) and Hibernate's `@CreationTimestamp` / `@UpdateTimestamp` — do not set these fields manually.
 - `ddl-auto: validate` means Hibernate validates the schema against Flyway-managed tables on startup; never use `create` or `update`.
 
+## Configuration & environment variables
+
+**Required:** Whenever a new environment variable or application property is added, document it in `README.md` — include the variable name, what it controls, and its default value. Follow the pattern of the existing `FIREBASE_SERVICE_ACCOUNT_PATH` and `CORS_ALLOWED_ORIGIN` sections.
+
 ## Database migrations
 
 Migrations live in `src/main/resources/db/migration/` and follow Flyway's `V{n}__{description}.sql` naming. Always create a new versioned file — never edit an existing migration.

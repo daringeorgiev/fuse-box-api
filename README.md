@@ -52,6 +52,14 @@ To claim existing panels that were created before auth was enabled, update them 
 UPDATE panel SET user_id = '<your-firebase-uid>' WHERE user_id IS NULL;
 ```
 
+## CORS
+
+By default the API allows requests from `http://localhost:5173` (the Vite dev server). Override it with an environment variable:
+
+```bash
+CORS_ALLOWED_ORIGIN=https://your-app.web.app mvn spring-boot:run
+```
+
 ---
 
 ## Running PostgreSQL locally
