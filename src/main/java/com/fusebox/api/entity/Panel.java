@@ -46,6 +46,10 @@ public class Panel {
     @Column(nullable = false)
     private boolean isDefault;
 
+    @Builder.Default
+    @Column(nullable = false)
+    private int sortOrder = 100;
+
     @Column(length = 128)
     private String userId;
 

@@ -30,7 +30,9 @@ public class PanelService {
                 ? panelRepository.findByUserIdOrIsDefaultTrue(userId)
                 : panelRepository.findByIsDefaultTrue();
         return panels.stream()
-                .sorted(Comparator.comparing(Panel::isDefault).reversed())
+                .sorted(Comparator.comparing(Panel::isDefault).reversed()
+                        .thenComparingInt(Panel::getSortOrder)
+                        .thenComparing(Panel::getName))
                 .map(panelMapper::toResponse)
                 .toList();
     }
