@@ -5,6 +5,8 @@ services:
       POSTGRES_DB: fusebox
       POSTGRES_USER: fusebox
       POSTGRES_PASSWORD: fusebox
+      TZ: UTC
+      PGTZ: UTC
     ports:
       - "5432:5432"
     volumes:
