@@ -33,6 +33,12 @@ firebase:
 cors:
   allowed-origin: ${CORS_ALLOWED_ORIGIN:http://localhost:5173}
 
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
 debug: true
 
 logging:
