@@ -6,6 +6,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,6 +21,8 @@ import java.util.List;
 
 @Component
 public class FirebaseTokenFilter extends OncePerRequestFilter {
+
+    private static final Logger log = LoggerFactory.getLogger(FirebaseTokenFilter.class);
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -42,8 +46,9 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(auth);
             chain.doFilter(request, response);
         } catch (Exception e) {
+            log.warn("Firebase token verification failed: {}", e.getMessage());
             SecurityContextHolder.clearContext();
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            chain.doFilter(request, response);
         }
     }
 }

@@ -16,6 +16,9 @@ public class FirebaseConfig {
     @Value("${firebase.service-account-path:}")
     private String serviceAccountPath;
 
+    @Value("${firebase.project-id:}")
+    private String projectId;
+
     @PostConstruct
     public void initialize() throws IOException {
         if (FirebaseApp.getApps().isEmpty()) {
@@ -23,9 +26,12 @@ public class FirebaseConfig {
                     ? GoogleCredentials.fromStream(new FileInputStream(serviceAccountPath))
                     : GoogleCredentials.getApplicationDefault();
 
-            FirebaseOptions options = FirebaseOptions.builder()
-                    .setCredentials(credentials)
-                    .build();
+            FirebaseOptions.Builder builder = FirebaseOptions.builder()
+                    .setCredentials(credentials);
+            if (projectId != null && !projectId.isBlank()) {
+                builder.setProjectId(projectId);
+            }
+            FirebaseOptions options = builder.build();
             FirebaseApp.initializeApp(options);
         }
     }

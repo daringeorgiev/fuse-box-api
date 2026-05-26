@@ -29,6 +29,7 @@ springdoc:
 
 firebase:
   service-account-path: ${FIREBASE_SERVICE_ACCOUNT_PATH:}
+  project-id: ${FIREBASE_PROJECT_ID:}
 
 cors:
   allowed-origin: ${CORS_ALLOWED_ORIGIN:http://localhost:5173}
