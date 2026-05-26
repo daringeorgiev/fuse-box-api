@@ -13,18 +13,20 @@ import java.io.IOException;
 @Configuration
 public class FirebaseConfig {
 
-    @Value("${firebase.service-account-path}")
+    @Value("${firebase.service-account-path:}")
     private String serviceAccountPath;
 
     @PostConstruct
     public void initialize() throws IOException {
         if (FirebaseApp.getApps().isEmpty()) {
-            try (var serviceAccount = new FileInputStream(serviceAccountPath)) {
-                FirebaseOptions options = FirebaseOptions.builder()
-                        .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                        .build();
-                FirebaseApp.initializeApp(options);
-            }
+            GoogleCredentials credentials = (serviceAccountPath != null && !serviceAccountPath.isBlank())
+                    ? GoogleCredentials.fromStream(new FileInputStream(serviceAccountPath))
+                    : GoogleCredentials.getApplicationDefault();
+
+            FirebaseOptions options = FirebaseOptions.builder()
+                    .setCredentials(credentials)
+                    .build();
+            FirebaseApp.initializeApp(options);
         }
     }
 }
