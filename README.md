@@ -98,6 +98,8 @@ java -jar target/fuse-box-api-0.0.1-SNAPSHOT.jar
 
 The API is deployed to **Google Cloud Run** backed by a **Neon** (serverless PostgreSQL) database. The frontend is hosted on **Firebase Hosting**.
 
+**Production API:** https://fuse-box-api-412787280872.europe-west1.run.app
+
 ### Production environment variables
 
 | Variable | Description |
