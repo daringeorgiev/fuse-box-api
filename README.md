@@ -94,6 +94,26 @@ mvn clean package
 java -jar target/fuse-box-api-0.0.1-SNAPSHOT.jar
 ```
 
+## Deployment
+
+The API is deployed to **Google Cloud Run** backed by a **Neon** (serverless PostgreSQL) database. The frontend is hosted on **Firebase Hosting**.
+
+### Production environment variables
+
+| Variable | Description |
+|----------|-------------|
+| `DB_HOST` | Neon database host |
+| `DB_PORT` | Database port (default `5432`) |
+| `DB_NAME` | Database name |
+| `DB_USERNAME` | Database user |
+| `DB_PASSWORD` | Database password |
+| `SPRING_PROFILES_ACTIVE` | Set to `prod` to enable SSL and disable debug logging |
+| `CORS_ALLOWED_ORIGIN` | Frontend URL (e.g. `https://fuse-box-8ec50.web.app`) |
+
+In production, Firebase credentials are provided automatically via Application Default Credentials — no `service-account.json` is needed.
+
+---
+
 ## Swagger UI
 
 Browse the interactive API docs at:
